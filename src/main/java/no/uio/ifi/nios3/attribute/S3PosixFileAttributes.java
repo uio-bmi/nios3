@@ -10,9 +10,7 @@ public class S3PosixFileAttributes extends S3BasicFileAttributes implements Posi
     private Set<PosixFilePermission> posixFilePermissions;
 
     public S3PosixFileAttributes(String key, FileTime lastModifiedTime, long size, boolean isDirectory, boolean isRegularFile, UserPrincipal userPrincipal, GroupPrincipal groupPrincipal, Set<PosixFilePermission> posixFilePermissionSet) {
-
         super(key, lastModifiedTime, size, isDirectory, isRegularFile);
-
         this.userPrincipal = userPrincipal;
         this.groupPrincipal = groupPrincipal;
         this.posixFilePermissions = posixFilePermissionSet;

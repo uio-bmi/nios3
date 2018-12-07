@@ -52,8 +52,7 @@ public class S3PosixFileAttributeView implements PosixFileAttributeView {
 
     public PosixFileAttributes read() throws IOException {
         if (posixFileAttributes == null) {
-            posixFileAttributes = s3Path.getFileSystem()
-                    .provider().readAttributes(s3Path, PosixFileAttributes.class);
+            posixFileAttributes = s3Path.getFileSystem().provider().readAttributes(s3Path, PosixFileAttributes.class);
         }
         return posixFileAttributes;
     }

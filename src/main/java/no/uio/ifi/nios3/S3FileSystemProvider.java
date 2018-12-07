@@ -15,7 +15,6 @@ import no.uio.ifi.nios3.attribute.S3BasicFileAttributes;
 import no.uio.ifi.nios3.attribute.S3PosixFileAttributeView;
 import no.uio.ifi.nios3.attribute.S3PosixFileAttributes;
 import no.uio.ifi.nios3.util.AttributesUtils;
-import no.uio.ifi.nios3.util.Cache;
 import no.uio.ifi.nios3.util.S3Utils;
 
 import java.io.ByteArrayInputStream;
@@ -73,7 +72,6 @@ public class S3FileSystemProvider extends FileSystemProvider {
             AmazonS3Factory.USER_AGENT, AMAZON_S3_FACTORY_CLASS, AmazonS3Factory.SIGNER_OVERRIDE, AmazonS3Factory.PATH_STYLE_ACCESS);
 
     private S3Utils s3Utils = new S3Utils();
-    private Cache cache = new Cache();
 
     @Override
     public String getScheme() {
@@ -492,8 +490,7 @@ public class S3FileSystemProvider extends FileSystemProvider {
                 return type.cast(attrs);
             }
         } else if (type == PosixFileAttributes.class) {
-            if (s3Path.getFileAttributes() instanceof PosixFileAttributes &&
-                    cache.isInTime(s3Path.getFileSystem().getCache(), s3Path.getFileAttributes())) {
+            if (s3Path.getFileAttributes() instanceof PosixFileAttributes && cache.isInTime(s3Path.getFileSystem().getCache(), s3Path.getFileAttributes())) {
                 A result = type.cast(s3Path.getFileAttributes());
                 s3Path.setFileAttributes(null);
                 return result;
@@ -612,28 +609,13 @@ public class S3FileSystemProvider extends FileSystemProvider {
     }
 
     public void close(S3FileSystem fileSystem) {
-        if (fileSystem.getKey() != null && fileSystems.containsKey(fileSystem.getKey()))
+        if (fileSystem.getKey() != null) {
             fileSystems.remove(fileSystem.getKey());
+        }
     }
 
     public boolean isOpen(S3FileSystem s3FileSystem) {
         return fileSystems.containsKey(s3FileSystem.getKey());
-    }
-
-    /**
-     * only 4 testing
-     */
-
-    protected static ConcurrentMap<String, S3FileSystem> getFilesystems() {
-        return fileSystems;
-    }
-
-    public Cache getCache() {
-        return cache;
-    }
-
-    public void setCache(Cache cache) {
-        this.cache = cache;
     }
 
 }

@@ -22,6 +22,7 @@ import static java.lang.String.format;
 public class S3Path implements Path {
 
     public static final String PATH_SEPARATOR = "/";
+
     /**
      * S3FileStore which represents the Bucket this path resides in.
      */
@@ -54,8 +55,6 @@ public class S3Path implements Path {
 
         Preconditions.checkArgument(first != null, "first path must be not null");
         Preconditions.checkArgument(!first.startsWith("//"), "first path doesnt start with '//'. Miss bucket");
-        // see tests com.upplication.s3fs.Path.EndsWithTest#endsWithRelativeBlankAbsolute()
-        // Preconditions.checkArgument(!first.isEmpty(), "first path must be not empty");
 
         boolean hasBucket = first.startsWith("/");
 
@@ -66,7 +65,6 @@ public class S3Path implements Path {
                         .split(first));
 
         if (hasBucket) { // absolute path
-
             Preconditions.checkArgument(pathsURI.size() >= 1, "path must start with bucket name");
             Preconditions.checkArgument(!pathsURI.get(0).isEmpty(), "bucket name must be not empty");
             String bucket = pathsURI.get(0);
